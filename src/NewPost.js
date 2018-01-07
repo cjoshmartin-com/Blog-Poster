@@ -1,18 +1,20 @@
 
 import React from 'react';
 import { Text, View, TouchableHighlight } from 'react-native';
+import { MarkdownEditor } from 'react-native-markdown-editor';
 
 export default class NewPost extends React.Component {
 
     static navigationOptions = {
-        title: 'Coming Soon!',
+        title: 'Compose Your Post',
     };
+
+    onTextChange(text){
+    }
     render(){
     
         return(
-            <View>
-                <Text>  </Text>
-            </View>
+            <MarkdownEditor onMarkdownChange={this.onTextChange} showPreview={true}/>
         )
     
     }
