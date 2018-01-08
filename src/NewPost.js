@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Text, View, TouchableHighlight, Button, TextInput, StyleSheet} from 'react-native';
+import Markdown from 'react-native-simple-markdown'
 
 export default class NewPost extends React.Component {
 
-    state = {isPreview: false, text: "The Markdown Editor is coming!" };
+    state = {isPreview: false, BodyText: "## The Markdown Editor is coming!", TitleText: "NEWS! its coming!" };
 
     componentDidMount() {
         this.props.navigation.setParams({ togglePreview: this._togglePreview.bind(this)});
@@ -17,7 +18,7 @@ export default class NewPost extends React.Component {
         let editButton =(<Button title={(params.isEditing)?"Edit" : "Done"} onPress={params.togglePreview ? params.togglePreview : () => null} />) 
 
         return { 
-            
+
             title: 'Compose Your Post',
             headerRight: editButton,
         }
@@ -32,11 +33,11 @@ export default class NewPost extends React.Component {
     }
     render(){
         console.log(this.state)
-        return(
-            <View style={{flex: 1}}>
-                <TextInput editable = {this.state.isPreview}  multiline = {true} onChangeText={(text) => this.setState({text})} value={this.state.text} style={Styles.BodyField} />
-            </View>
-        )
+        return( <View style={{flex: 1}}>
+            <TextInput editable={this.state.isPreview}  onChangeText={(TitleText) => this.setState({TitleText})} value={this.state.TitleText} style={Styles.TitleField}/>
+            { (this.state.isPreview) ?  <TextInput editable = {this.state.isPreview}  multiline = {true} onChangeText={(BodyText) => this.setState({BodyText})} value={this.state.BodyText} style={Styles.BodyField} /> : <Markdown style={Styles.Markdown}> {this.state.BodyText} </Markdown> }
+
+                </View>)
 
     }
 
@@ -50,6 +51,23 @@ var Styles = StyleSheet.create({
         padding: 4,
         paddingLeft: 8,
         fontSize: 16,
+    },
+    TitleField:{
+
+        borderColor: 'rgba(82, 194, 175, 1)',
+        borderWidth: 1,
+        padding: 20,
+        paddingLeft: 8,
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    Markdown:{
+    
+        flex: 1,
+        padding: 4,
+        paddingLeft: 15,
+    
     }
 
 })
