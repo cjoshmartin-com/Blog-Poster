@@ -5,7 +5,7 @@ import Markdown from 'react-native-simple-markdown'
 
 export default class NewPost extends React.Component {
 
-    state = {isPreview: false, BodyText: "## The Markdown Editor is coming!", TitleText: "NEWS! its coming!" };
+    state = {isPreview: false, BodyText: "# The Markdown Editor is coming!", TitleText: "NEWS! its coming!" };
 
     componentDidMount() {
         this.props.navigation.setParams({ togglePreview: this._togglePreview.bind(this)});
