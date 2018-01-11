@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { FlatList, Text, View, TouchableHighlight } from 'react-native';
-import { db, auth } from './firebase.js'
 
 export default class Main extends React.Component {
     state = {
