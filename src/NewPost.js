@@ -10,12 +10,27 @@ export default class NewPost extends React.Component {
     componentDidMount() {
         this.props.navigation.setParams({ togglePreview: this._togglePreview.bind(this)});
         this.props.navigation.setParams({isEditing: true })
+        if(this.props.navigation.state.params.title)
+        {
+            this.setState({TitleText: this.props.navigation.state.params.title})
+            this.setState({BodyText: this.props.navigation.state.params.body})
+        }
     }
 
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state; 
 
-        let editButton =(<Button title={(params.isEditing)?"Edit" : "Done"} onPress={params.togglePreview ? params.togglePreview : () => null} />) 
+        function _editorState(){
+
+            if(params.isEditing)
+            {
+                return 'Edit'
+            }
+
+            return 'Done'
+        }
+
+        let editButton =(<Button title={_editorState()} onPress={params.togglePreview ? params.togglePreview : () => null} />) 
 
         return { 
 
@@ -23,6 +38,7 @@ export default class NewPost extends React.Component {
             headerRight: editButton,
         }
     };
+
 
     _togglePreview(){
         console.log(this.props.navigation.state.params)
@@ -32,12 +48,11 @@ export default class NewPost extends React.Component {
     onTextChange(text){
     }
     render(){
-        console.log(this.state)
         return( <View style={{flex: 1}}>
             <TextInput editable={this.state.isPreview}  onChangeText={(TitleText) => this.setState({TitleText})} value={this.state.TitleText} style={Styles.TitleField}/>
             { (this.state.isPreview) ?  <TextInput editable = {this.state.isPreview}  multiline = {true} onChangeText={(BodyText) => this.setState({BodyText})} value={this.state.BodyText} style={Styles.BodyField} /> : <Markdown style={Styles.Markdown}> {this.state.BodyText} </Markdown> }
 
-                </View>)
+        </View>)
 
     }
 
@@ -63,11 +78,11 @@ var Styles = StyleSheet.create({
         textAlign: 'center',
     },
     Markdown:{
-    
+
         flex: 1,
         padding: 4,
         paddingLeft: 15,
-    
+
     }
 
 })
