@@ -10,7 +10,7 @@ export default class NewPost extends React.Component {
     componentDidMount() {
         this.props.navigation.setParams({ togglePreview: this._togglePreview.bind(this)});
         this.props.navigation.setParams({isEditing: true })
-        if(this.props.navigation.state.params.title)
+        if(this.props.navigation.state.params.isPost)
         {
             this.setState({TitleText: this.props.navigation.state.params.title})
             this.setState({BodyText: this.props.navigation.state.params.body})

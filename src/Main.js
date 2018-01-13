@@ -38,6 +38,7 @@ export default class Main extends React.Component {
                         data_modifited: data[e].data_modifited, 
                         body: data[e].body, 
                         title:data[e].title,
+                        isPost: true,
                     }  
                 })
                 this.setState({data: oldstatedata})
@@ -55,7 +56,7 @@ export default class Main extends React.Component {
                 justifyContent: 'center', 
                 alignItems: 'center'
             }} 
-            onPress={() => { (item.key == this.state.newPostTitle) ? this.state.navigate("NewPost") : this.state.navigate("NewPost", item.params) }}>
+            onPress={() => { (item.key == this.state.newPostTitle) ? this.state.navigate("NewPost", {isPost: false }) : this.state.navigate("NewPost", item.params) }}>
 
                 <Text style={{fontSize: 20, color: 'white'}}> {item.key} </Text>
 
