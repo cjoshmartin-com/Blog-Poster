@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { FlatList, Text, View, TouchableHighlight } from 'react-native';
+import { NavigationActions } from 'react-navigation'
 
 import { db, auth } from './firebase.js'
 export default class Main extends React.Component {
@@ -13,17 +14,27 @@ export default class Main extends React.Component {
         title: 'Welcome',
     };
 
+    componentWillMount(){
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Login'})
+            ]
+        })
 
-    componentDidMount(){
-        if(!this.state.navigate) {
+         if(!this.state.navigate) {
             const { navigate } = this.props.navigation;
             this.setState({navigate: navigate})
         }
+
         auth.onAuthStateChanged((user) => {
-            (user) ? console.log("USER EXIST") : console.log(`USER DOESN'T EXIST`)
+            (user) ? console.log("USER EXIST") : this.props.navigation.dispatch(resetAction) 
         })
 
-        db.child('blog').on('value', (snapshot)=>{
+
+    }
+    componentDidMount(){
+           db.child('blog').on('value', (snapshot)=>{
             const data = snapshot.toJSON()
             const keys =Object.keys(data)
             const refreshdata = [] 
