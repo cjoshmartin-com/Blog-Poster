@@ -33,13 +33,12 @@ export default class Login extends React.Component {
                 NavigationActions.navigate({ routeName: 'Home'})
             ]
         })
-        auth.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => this.props.navigation.dispatch(resetAction) )
+        auth.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => this.props.navigation.dispatch(resetAction) ).catch((e)=>alert(e.toString()))
     }
 
     render(){
         return(
-            <View >
-                <View style={{flex:2}} />
+            <View style={{ flex: 1, backgroundColor: '#429EA6',}}>
 
                 <KeyboardAvoidingView  behavior="padding">
                     <Jiro
@@ -66,7 +65,7 @@ export default class Login extends React.Component {
 
                     />
                     <View style={{flexDirection:"row", paddingTop: 30}} >
-                        <TouchableOpacity  onPress={this.login}>
+                        <TouchableOpacity style={[styles.loginbutton]}  onPress={this.login}>
                             <Text style={{color:"rgba(255,255,255,.6)",fontWeight:'700'}}> LOGIN</Text>
                         </TouchableOpacity>
                     </View>
@@ -77,4 +76,18 @@ export default class Login extends React.Component {
     }
 
 }
+
+
+var styles =  StyleSheet.create({
+loginbutton:{
+      backgroundColor: "rgba(255,255,255,.1)",
+      width: 200,
+      paddingVertical: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+
+})
+
+
 

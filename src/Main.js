@@ -9,6 +9,7 @@ export default class Main extends React.Component {
         data: [],
         newPostTitle: "create a new Post",
         navigate: null,
+        is_testing: false,
     };
     static navigationOptions = {
         title: 'Welcome',
@@ -22,19 +23,19 @@ export default class Main extends React.Component {
             ]
         })
 
-         if(!this.state.navigate) {
+        if(!this.state.is_testing) {
+            auth.onAuthStateChanged((user) => {
+                (user) ? console.log("USER EXIST") : this.props.navigation.dispatch(resetAction) 
+            })
+        }
+        if(!this.state.navigate) {
             const { navigate } = this.props.navigation;
             this.setState({navigate: navigate})
         }
 
-        auth.onAuthStateChanged((user) => {
-            (user) ? console.log("USER EXIST") : this.props.navigation.dispatch(resetAction) 
-        })
-
-
     }
     componentDidMount(){
-           db.child('blog').on('value', (snapshot)=>{
+        db.child('blog').on('value', (snapshot)=>{
             const data = snapshot.toJSON()
             const keys =Object.keys(data)
             const refreshdata = [] 
@@ -64,12 +65,12 @@ export default class Main extends React.Component {
         return(
             <TouchableHighlight style={{
                 backgroundColor:'#13262f', 
-                justifyContent: 'center', 
-                alignItems: 'center'
+                borderBottomWidth: 5,
+                borderColor: 'white',
             }} 
             onPress={() => { (item.key == this.state.newPostTitle) ? this.state.navigate("NewPost", {isPost: false }) : this.state.navigate("NewPost", item.params) }}>
 
-            <Text style={{fontSize: 20, color: 'white'}}> {item.key} </Text>
+            <Text style={{fontSize: 40, color: 'white'}}> {item.key} </Text>
 
         </TouchableHighlight>
         )
