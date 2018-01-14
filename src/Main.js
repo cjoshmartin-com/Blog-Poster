@@ -14,37 +14,37 @@ export default class Main extends React.Component {
     };
 
 
-    componentWillMount(){
-        this.state.data.push({key: this.state.newPostTitle }) 
+    componentDidMount(){
         if(!this.state.navigate) {
             const { navigate } = this.props.navigation;
             this.setState({navigate: navigate})
         }
-
-        let blogPosts;
         auth.onAuthStateChanged((user) => {
             (user) ? console.log("USER EXIST") : console.log(`USER DOESN'T EXIST`)
         })
-      db.child('blog').on('value', (snapshot)=>{
+
+        db.child('blog').on('value', (snapshot)=>{
             const data = snapshot.toJSON()
             const keys =Object.keys(data)
-            
+            const refreshdata = [] 
+
+            refreshdata.push({key: this.state.newPostTitle }) 
+
             keys.map(e => {
-                const oldstatedata = this.state.data
-                oldstatedata.push({ 
+                refreshdata.push({ 
                     key: data[e].title, 
-                    id: e,
                     params:{ 
                         data_modifited: data[e].data_modifited, 
                         body: data[e].body, 
                         title:data[e].title,
                         isPost: true,
+                        id: e,
                     }  
                 })
-                this.setState({data: oldstatedata})
+                this.setState({data: refreshdata})
             })
         })
-        
+
         console.log(this.state.data)
     } // end of componentwillmount
     _renderlistitem({ item })
@@ -58,9 +58,9 @@ export default class Main extends React.Component {
             }} 
             onPress={() => { (item.key == this.state.newPostTitle) ? this.state.navigate("NewPost", {isPost: false }) : this.state.navigate("NewPost", item.params) }}>
 
-                <Text style={{fontSize: 20, color: 'white'}}> {item.key} </Text>
+            <Text style={{fontSize: 20, color: 'white'}}> {item.key} </Text>
 
-            </TouchableHighlight>
+        </TouchableHighlight>
         )
     }
     render()

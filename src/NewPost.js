@@ -3,9 +3,15 @@ import React from 'react';
 import { Text, View, TouchableHighlight, Button, TextInput, StyleSheet} from 'react-native';
 import Markdown from 'react-native-simple-markdown'
 
+import { db } from './firebase.js'
 export default class NewPost extends React.Component {
 
-    state = {isPreview: false, BodyText: "# The Markdown Editor is coming!", TitleText: "NEWS! its coming!" };
+    state = {
+        isPreview: false, 
+        BodyText: "# The Markdown Editor is coming!", 
+        TitleText: "NEWS! its coming!",
+        did_text_change: false,
+    };
 
     componentDidMount() {
         this.props.navigation.setParams({ togglePreview: this._togglePreview.bind(this)});
@@ -15,6 +21,32 @@ export default class NewPost extends React.Component {
             this.setState({TitleText: this.props.navigation.state.params.title})
             this.setState({BodyText: this.props.navigation.state.params.body})
         }
+    }
+
+    componentWillUnmount(){
+        if(this.state.did_text_change)
+        {
+            let id, date_modified;
+
+            if(this.props.navigation.state.params.isPost){
+                id = this.props.navigation.state.params.id
+                date_modified =(new Date() ).getTime()
+            }
+            else
+            {
+                id = (new Date() ).getTime()
+                date_modified = 'N/A';
+
+            }
+            console.log(date_modified)
+            db.child('blog').child(id).set({
+                body: this.state.BodyText,
+                title: this.state.TitleText,
+                date_modified,
+            })
+        } 
+    
+    
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -41,16 +73,37 @@ export default class NewPost extends React.Component {
 
 
     _togglePreview(){
-        console.log(this.props.navigation.state.params)
         this.setState({isPreview: !this.state.isPreview })
         this.props.navigation.setParams({isEditing:  !this.props.navigation.state.params.isEditing  })
     }
+
     onTextChange(text){
+
+        this.setState({did_text_change: true})
+        this.setState(text)
     }
     render(){
         return( <View style={{flex: 1}}>
-            <TextInput editable={this.state.isPreview}  onChangeText={(TitleText) => this.setState({TitleText})} value={this.state.TitleText} style={Styles.TitleField}/>
-            { (this.state.isPreview) ?  <TextInput editable = {this.state.isPreview}  multiline = {true} onChangeText={(BodyText) => this.setState({BodyText})} value={this.state.BodyText} style={Styles.BodyField} /> : <Markdown style={Styles.Markdown}> {this.state.BodyText} </Markdown> }
+
+            <TextInput
+                editable={this.state.isPreview}
+                onChangeText={(TitleText) => this.onTextChange({TitleText})}
+                value={this.state.TitleText}
+                style={Styles.TitleField}/>
+
+            { (this.state.isPreview) ?  
+                    <TextInput 
+                        editable = {this.state.isPreview} 
+                        multiline = {true} 
+                        onChangeText={(BodyText) => this.onTextChange({BodyText})} 
+                        value={this.state.BodyText} 
+                style={Styles.BodyField} /> :
+                    <Markdown 
+                        style={Styles.Markdown}> 
+                        
+                        {this.state.BodyText} 
+                   
+                    </Markdown> }
 
         </View>)
 
