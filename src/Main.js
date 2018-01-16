@@ -3,31 +3,19 @@ import React from 'react';
 import { FlatList, Text, View, TouchableHighlight } from 'react-native';
 import { NavigationActions } from 'react-navigation'
 
-import { db, auth } from './firebase.js'
+import { db } from './firebase.js'
+
 export default class Main extends React.Component {
     state = {
         data: [],
         newPostTitle: "create a new Post",
         navigate: null,
-        is_testing: false,
     };
     static navigationOptions = {
         title: 'Welcome',
     };
 
     componentWillMount(){
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Login'})
-            ]
-        })
-
-        if(!this.state.is_testing) {
-            auth.onAuthStateChanged((user) => {
-                (user) ? console.log("USER EXIST") : this.props.navigation.dispatch(resetAction) 
-            })
-        }
         if(!this.state.navigate) {
             const { navigate } = this.props.navigation;
             this.setState({navigate: navigate})
@@ -57,7 +45,6 @@ export default class Main extends React.Component {
             })
         })
 
-        console.log(this.state.data)
     } // end of componentwillmount
     _renderlistitem({ item })
     {
